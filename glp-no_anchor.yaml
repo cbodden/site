@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+  loki:
+    container_name: loki
+    hostname: loki
+    image: "grafana/loki:latest"
+    ports:
+      - 3100:3100
+    volumes:
+      - "${STORAGE}/loki/config/loki-config.yaml:/etc/loki/loki-config.yaml"
+      - "${STORAGE}/loki/data:/data/loki"
+    command: -config.file=/etc/loki/loki-config.yaml
+
+  grafana:
+    container_name: grafana
+    hostname: grafana
+    image: "grafana/grafana:latest"
+    user: "0"
+    ports:
+      - 3000:3000
+    volumes:
+      - "${STORAGE}/grafana/data:/var/lib/grafana"
+      - "${STORAGE}/grafana/log:/var/log/grafana"
+      - "${STORAGE}/grafana/config/grafana.ini:/etc/grafana/grafana.ini"
+
+  prometheus:
+    container_name: prometheus
+    hostname: prometheus
+    image: "prom/prometheus:v2.46.0"
+    ports:
+      - 9090:9090
+    volumes:
+      - "${STORAGE}/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml"
